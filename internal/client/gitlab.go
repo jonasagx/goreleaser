@@ -65,7 +65,7 @@ func (c *gitlabClient) Changelog(ctx *context.Context, repo Repo, prev, current 
 		To:   &current,
 	}
 
-	result, _, err := c.client.Repositories.Compare(encodeRepoPath(repo), cmpOpts)
+	result, _, err := c.client.Repositories.Compare(repo.String(), cmpOpts)
 	var log []string
 	if err != nil {
 		return "", err
