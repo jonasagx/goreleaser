@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -63,7 +64,8 @@ func (c *gitlabClient) Changelog(ctx *context.Context, repo Repo, prev, current 
 		From: &prev,
 		To:   &current,
 	}
-	result, _, err := c.client.Repositories.Compare(repo.String(), cmpOpts)
+
+	result, _, err := c.client.Repositories.Compare(encodeRepoPath(repo), cmpOpts)
 	var log []string
 	if err != nil {
 		return "", err
@@ -494,4 +496,11 @@ func (c *gitlabClient) getMilestoneByTitle(repo Repo, title string) (*gitlab.Mil
 	}
 
 	return nil, nil
+}
+
+func encodeRepoPath(r Repo) string {
+	if r.Owner == "" && r.Name == "" {
+		return ""
+	}
+	return r.Owner + "/" + url.QueryEscape(r.Name)
 }

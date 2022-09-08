@@ -409,7 +409,7 @@ func TestGitlabGetDefaultBranchErr(t *testing.T) {
 
 func TestGitlabChangelog(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasSuffix(r.URL.Path, "projects/someone/something/repository/compare") {
+		if strings.HasSuffix(r.URL.Path, "projects/someone/something%2Funder%2Fsomething%2Felse/repository/compare") {
 			r, err := os.Open("testdata/gitlab/compare.json")
 			require.NoError(t, err)
 			_, err = io.Copy(w, r)
@@ -429,7 +429,7 @@ func TestGitlabChangelog(t *testing.T) {
 	require.NoError(t, err)
 	repo := Repo{
 		Owner:  "someone",
-		Name:   "something",
+		Name:   "something/under/something/else",
 		Branch: "somebranch",
 	}
 
